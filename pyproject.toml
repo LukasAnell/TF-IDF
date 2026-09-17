@@ -7,7 +7,10 @@ authors = [
     { name = "LukasAnell", email = "lukasmanell@gmail.com" }
 ]
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "numpy>=2.5.3",
+    "pandas>=3.0.5",
+]
 
 [project.scripts]
 tf-idf = "tf_idf:main"
