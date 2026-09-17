@@ -43,7 +43,7 @@ if __name__ == "__main__":
     PROJECT_ROOT: Path = Path(__file__).resolve().parent
 
     # Define directory to download books into
-    download_dir: Path = PROJECT_ROOT / "data" / "raw"
+    download_dir: Path = PROJECT_ROOT.parents[1] / "data" / "raw"
 
     # Create directories if it doesn't already exist
     download_dir.mkdir(parents=True, exist_ok=True)
