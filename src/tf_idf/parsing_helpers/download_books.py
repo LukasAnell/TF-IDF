@@ -1,4 +1,5 @@
 import logging
+from logging import Logger
 from pathlib import Path
 
 import requests
@@ -27,6 +28,9 @@ def download_book(url: str, destination_folder: Path) -> None:
 
 
 if __name__ == "__main__":
+    # Create logger
+    logger: Logger = logging.getLogger(__name__)
+
     # List of books to download
     ids: list[int] = [
         1228,
@@ -35,9 +39,6 @@ if __name__ == "__main__":
         46129,
         4341,
     ]
-
-    # Create logger
-    logger = logging.getLogger(__name__)
 
     # Find project's root folder instead of using relative paths
     PROJECT_ROOT: Path = Path(__file__).resolve().parent
