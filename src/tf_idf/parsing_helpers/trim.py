@@ -67,13 +67,13 @@ if __name__ == "__main__":
     # Create logger
     logger: Logger = logging.getLogger(__name__)
 
-    # List of book ids
-    ids: list[int] = [
-        1228,
-        2300,
-        2940,
-        46129,
-        4341,
+    # List of book ids and start/end phrases
+    books: list[list[str]] = [
+        ["1228", "", ""],
+        ["2300", "", ""],
+        ["2940", "", ""],
+        ["46129", "", ""],
+        ["4341", "", ""],
     ]
 
     # Root folder
@@ -81,3 +81,15 @@ if __name__ == "__main__":
 
     # Define directory storing raw data
     raw_data_dir: Path = PROJECT_ROOT.parents[2] / "data" / "raw"
+
+    # Directory for storing trimmed data
+    trimmed_data_dir: Path = PROJECT_ROOT.parents[2] / "data" / "processed" / "trimmed"
+
+    # Create directory if it doesn't already exist
+    trimmed_data_dir.mkdir(parents=True, exist_ok=True)
+
+    # Run trim_text on each book, trimming before/after specified points
+    for book in books:
+        trim_text(
+            raw_data_dir / book[0] / ".txt.utf-8", trimmed_data_dir, book[1], book[2]
+        )
