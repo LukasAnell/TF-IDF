@@ -7,7 +7,7 @@ import requests
 # Download a book into the designated destination folder
 def download_book(url: str, destination_folder: Path) -> None:
     # Filename will just be ID from Project Gutenberg
-    filename: str = f"${url.split('/')[-1]}"
+    filename: str = f"{url.split('/')[-1]}"
 
     # Get full path for will-be downloaded file
     file_path: Path = destination_folder / filename
