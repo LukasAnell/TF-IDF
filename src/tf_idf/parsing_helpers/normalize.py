@@ -1,4 +1,5 @@
 import re
+import unicodedata
 from pathlib import Path
 
 
@@ -24,7 +25,14 @@ def normalize(filename: str) -> None:
         open(normalized_data_dir / filename, "w", encoding="utf-8") as outfile,
     ):
         for line in infile:
-            cleaned_line = punctuation_pattern.sub("", line.casefold())
+            # Casefold to normalizing casing
+            folded: str = line.casefold()
+
+            # Normalization Form C (for some Spanish in one of the texts)
+            normalized: str = unicodedata.normalize("NFC", folded)
+
+            # Strip remaining punctuation
+            cleaned_line = punctuation_pattern.sub("", normalized)
 
             _ = outfile.write(cleaned_line)
 
