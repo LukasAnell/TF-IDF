@@ -12,6 +12,7 @@ dependencies = [
     "pandas>=3.0.5",
     "pyarrow>=25.0.1",
     "requests>=2.34.2",
+    "scikit-learn>=1.9.1",
 ]
 
 [project.scripts]
@@ -25,3 +26,6 @@ build-backend = "uv_build"
 dev = [
     "pandas-stubs>=3.0.5.260914",
 ]
+
+[tool.pyright]
+reportMissingTypeStubs = "none"
