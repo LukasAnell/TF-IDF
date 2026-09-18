@@ -38,3 +38,6 @@ if __name__ == "__main__":
         46129,
         4341,
     ]
+
+    for id in ids:
+        normalize(f"{id}.txt.utf-8")
