@@ -2,25 +2,6 @@ import logging
 from logging import Logger
 from pathlib import Path
 
-# Trim before `When on board H.M.S. ‘Beagle,’ as naturalist, I was much struck with`
-# Trim after `and are being, evolved.`
-
-
-# Trim before `The nature of the following work will be best understood by a brief`
-# Trim after `probability to the action of sexual selection.`
-
-
-# Trim before `IT may be safely assumed that, two thousand years ago, before Caesar` (11-12 lines before this?)
-# Trim after `"Childe Roland to the dark Tower came."`
-
-
-# Trim before `Two aspects of animal life impressed me most during the journeys which I` (3-4 lines before this?)
-# Trim after `evolution of our race.`
-
-
-# Trim before `THE DATA OF ETHICS.`
-# Trim after `Transcriber's note:`
-
 
 def trim_text(
     input_path: Path, output_path: Path, start_phrase: str, end_phrase: str
@@ -69,11 +50,27 @@ if __name__ == "__main__":
 
     # List of book ids and start/end phrases
     books: list[list[str]] = [
-        ["1228", "", ""],
-        ["2300", "", ""],
-        ["2940", "", ""],
-        ["46129", "", ""],
-        ["4341", "", ""],
+        [
+            "1228",
+            "When on board H.M.S. ‘Beagle,’ as naturalist, I was much struck with",
+            "INDEX.",
+        ],
+        [
+            "2300",
+            "The nature of the following work will be best understood by a brief",
+            "INDEX. — Abbot, C., on the battles of seals.",
+        ],
+        [
+            "2940",
+            "IT may be safely assumed that, two thousand years ago, before Caesar",
+            "[147]",
+        ],
+        [
+            "4341",
+            "Two aspects of animal life impressed me most during the journeys which I",
+            "End of Project Gutenberg's Mutual Aid, by kniaz' Petr Alekseevich Kropotkin",
+        ],
+        ["46129", "CONDUCT IN GENERAL.", "      *      *      *      *      *      *"],
     ]
 
     # Root folder
@@ -91,5 +88,8 @@ if __name__ == "__main__":
     # Run trim_text on each book, trimming before/after specified points
     for book in books:
         trim_text(
-            raw_data_dir / book[0] / ".txt.utf-8", trimmed_data_dir, book[1], book[2]
+            raw_data_dir / f"{book[0]}.txt.utf-8",
+            trimmed_data_dir / f"{book[0]}.txt.utf-8",
+            book[1],
+            book[2],
         )
