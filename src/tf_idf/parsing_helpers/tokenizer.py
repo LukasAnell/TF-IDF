@@ -31,6 +31,12 @@ def tokenize(book_id: str) -> None:
         # Stopword removal using scikit-learn's ENGLISH_STOP_WORD set
         tokens = [token for token in tokens if token not in ENGLISH_STOP_WORDS]
 
+        # Remove tokens if they're a single letter or digit
+        tokens = [tok for tok in tokens if len(tok) > 1]
+
+        # Also remove any numbers
+        tokens = [tok for tok in tokens if not tok.isdigit()]
+
         # Turn list of tokens into a list of dicts that label each token as coming from the given book_id
         rows: list[dict[str, str]] = [
             {"book_id": book_id, "token": token} for token in tokens
