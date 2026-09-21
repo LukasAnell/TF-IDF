@@ -55,10 +55,23 @@ def idf(D: list[DataFrame], output_path: Path) -> DataFrame:
     return idf_df
 
 
-def tfidf(d: DataFrame, D: DataFrame, output_path: Path) -> None:
+def tfidf(d: DataFrame, D: DataFrame, output_path: Path) -> DataFrame:
     # tf(t, d) * idf(t, D)
-    #
-    pass
+
+    # read in parquet if it exists
+    if output_path.exists():
+        return read_parquet(output_path)
+
+    # merge tf and idf DataFrames together
+    merged: DataFrame = d.merge(D, on="token")
+
+    # calculate tfidf for each document
+    merged["tfidf"] = merged["tf"] * merged["idf"]
+
+    # save as parquet
+    merged.to_parquet(output_path)
+
+    return merged
 
 
 if __name__ == "__main__":
@@ -94,11 +107,15 @@ if __name__ == "__main__":
     ]
 
     tf_dfs: list[DataFrame] = []
+
+    # for each document, run tf on it and append it to a list
     for id in ids:
         df: DataFrame = read_parquet(tokenized_data_dir / f"{id}.parquet")
         tf_dfs.append(tf(df, id, tf_data_dir))
 
+    # run idf on list of tf DataFrames
     idf_df: DataFrame = idf(tf_dfs, idf_data_dir)
 
+    # run tfidf on every tf DataFrame
     for df in tf_dfs:
-        tfidf(df, idf_df, tfidf_data_dir)
+        _ = tfidf(df, idf_df, tfidf_data_dir)
