@@ -31,6 +31,9 @@ def normalize(filename: str) -> None:
             # Normalization Form C (for some Spanish in one of the texts)
             normalized: str = unicodedata.normalize("NFC", folded)
 
+            # Specifically replace "--", as it caused some words to fuse together in testing
+            line = line.replace("--", " ")
+
             # Strip remaining punctuation
             cleaned_line = punctuation_pattern.sub("", normalized)
 
