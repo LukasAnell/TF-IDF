@@ -1,6 +1,7 @@
 from pathlib import Path
 
-from pandas import DataFrame, Series, read_parquet
+from numpy import log
+from pandas import DataFrame, Series, concat, read_parquet
 
 
 def tf(d: DataFrame, book_id: str, output_dir: Path) -> DataFrame:
@@ -26,9 +27,32 @@ def tf(d: DataFrame, book_id: str, output_dir: Path) -> DataFrame:
     return tf_df
 
 
-def idf(D: list[DataFrame]) -> None:
+def idf(D: list[DataFrame], output_path: Path) -> DataFrame:
     # idf(t, D) = \log{\frac{N_D}{1 + n_t}}
-    pass
+
+    # read in parquet if it exists
+    if output_path.exists():
+        return read_parquet(output_path)
+
+    # get total number of documents
+    N_D: int = len(D)
+
+    # combine all documents into one
+    combined: DataFrame = concat(D)
+
+    # get each token's occurences across all documents
+    n_t: Series[int] = combined["token"].value_counts()
+
+    # calculate idf for each term
+    idf_values: Series[float] = log(N_D / (1 + n_t))  # type: ignore[assignment]
+
+    # convert back to DataFrame
+    idf_df: DataFrame = idf_values.reset_index(name="idf")
+
+    # save as parquet
+    idf_df.to_parquet(output_path)
+
+    return idf_df
 
 
 def tfidf(t, d, D) -> None:
