@@ -44,7 +44,7 @@ def idf(D: list[DataFrame], output_path: Path) -> DataFrame:
     n_t: Series[int] = combined["token"].value_counts()
 
     # calculate idf for each term
-    idf_values: Series[float] = log(N_D / (1 + n_t))  # type: ignore[assignment]
+    idf_values: Series[float] = (N_D / (1 + n_t)).transform(log)
 
     # convert back to DataFrame
     idf_df: DataFrame = idf_values.reset_index(name="idf")
