@@ -32,7 +32,7 @@ def normalize(filename: str) -> None:
             normalized: str = unicodedata.normalize("NFC", folded)
 
             # Specifically replace "--", as it caused some words to fuse together in testing
-            line = line.replace("--", " ")
+            normalized = normalized.replace("--", " ")
 
             # Strip remaining punctuation
             cleaned_line = punctuation_pattern.sub("", normalized)
