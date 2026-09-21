@@ -55,13 +55,35 @@ def idf(D: list[DataFrame], output_path: Path) -> DataFrame:
     return idf_df
 
 
-def tfidf(t, d, D) -> None:
+def tfidf(d: DataFrame, D: DataFrame, output_path: Path) -> None:
     # tf(t, d) * idf(t, D)
     #
     pass
 
 
 if __name__ == "__main__":
+    # Root folder
+    PROJECT_ROOT: Path = Path(__file__).resolve().parent
+
+    # Designate paths for input and output data
+    tokenized_data_dir: Path = (
+        PROJECT_ROOT.parents[1] / "data" / "processed" / "tokenized"
+    )
+    tf_data_dir: Path = (
+        PROJECT_ROOT.parents[1] / "data" / "processed" / "tf"
+    )
+    idf_data_dir: Path = (
+        PROJECT_ROOT.parents[1] / "data" / "processed" / "idf"
+    )
+    tfidf_data_dir: Path = (
+        PROJECT_ROOT.parents[1] / "data" / "processed" / "tfidf"
+    )
+
+    # Create directory
+    tf_data_dir.mkdir(parents=True, exist_ok=True)
+    idf_data_dir.mkdir(parents=True, exist_ok=True)
+    tfidf_data_dir.mkdir(parents=True, exist_ok=True)
+
     # List of book ids
     ids: list[str] = [
         "1228",
@@ -71,4 +93,12 @@ if __name__ == "__main__":
         "4341",
     ]
 
-    pass
+    tf_dfs: list[DataFrame] = []
+    for id in ids:
+        df: DataFrame = read_parquet(tokenized_data_dir / f"{id}.parquet")
+        tf_dfs.append(tf(df, id, tf_data_dir))
+
+    idf_df: DataFrame = idf(tf_dfs, idf_data_dir)
+
+    for df in tf_dfs:
+        tfidf(df, idf_df, tfidf_data_dir)
