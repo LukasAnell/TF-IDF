@@ -114,8 +114,8 @@ if __name__ == "__main__":
         tf_dfs.append(tf(df, id, tf_data_dir))
 
     # run idf on list of tf DataFrames
-    idf_df: DataFrame = idf(tf_dfs, idf_data_dir)
+    idf_df: DataFrame = idf(tf_dfs, idf_data_dir / "idf.parquet")
 
     # run tfidf on every tf DataFrame
-    for df in tf_dfs:
-        _ = tfidf(df, idf_df, tfidf_data_dir)
+    for index, df in enumerate(tf_dfs):
+        _ = tfidf(df, idf_df, tfidf_data_dir / f"{ids[index]}.parquet")
