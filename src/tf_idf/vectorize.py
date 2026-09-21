@@ -1,10 +1,15 @@
 from pathlib import Path
 
-from pandas import DataFrame, Series
+from pandas import DataFrame, Series, read_parquet
 
 
 def tf(d: DataFrame, book_id: str, output_dir: Path) -> DataFrame:
     # tf(t, d) = \frac{f(t, d)}{\sum_{t' \in d}{f(t', d)}}
+
+    # read in parquet if it exists
+    output_path: Path = output_dir / f"{book_id}.parquet"
+    if output_path.exists():
+        return read_parquet(output_path)
 
     # vector storing each token with how many occurences there are
     counts: Series[int] = d["token"].value_counts()
@@ -16,7 +21,7 @@ def tf(d: DataFrame, book_id: str, output_dir: Path) -> DataFrame:
     tf_df: DataFrame = tf_values.reset_index(name="tf")
 
     # save as parquet
-    tf_df.to_parquet(output_dir / f"{book_id}.parquet")
+    tf_df.to_parquet(output_path)
 
     return tf_df
 
