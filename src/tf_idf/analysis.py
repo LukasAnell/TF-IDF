@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import matplotlib.pyplot as plt
 from numpy import dot, outer
 from numpy.linalg import norm
 from pandas import DataFrame, concat, read_parquet
@@ -82,3 +83,18 @@ if __name__ == "__main__":
     tf_long: DataFrame = load_stage(tf_data_dir, ids)
     tfidf_long: DataFrame = load_stage(tfidf_data_dir, ids)
     idf_df: DataFrame = read_parquet(idf_data_dir / "idf.parquet")
+
+    # Sorted tf and idf
+    print(top_terms(tf_long, "tf", 10))
+    lowest, highest = idf_extremes(idf_df, 10)
+    print(lowest)
+    print(highest)
+
+    # Highest tfidf terms per book
+    top_tfidf: DataFrame = top_terms(tfidf_long, "tfidf", 10)
+    print(top_tfidf)
+
+    # Compare books as vectors using cosine similarity
+    wide: DataFrame = to_wide(tfidf_long)
+    similarity: DataFrame = cosine_similarity(wide)
+    print(similarity.round(3))
