@@ -1,6 +1,8 @@
 from pathlib import Path
 
 import matplotlib.pyplot as plt
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
 from numpy import dot, outer
 from numpy.linalg import norm
 from pandas import DataFrame, concat, read_parquet
@@ -60,18 +62,22 @@ def cosine_similarity(wide: DataFrame) -> DataFrame:
 def plot_top_terms(
     top: DataFrame, value_col: str, output_dir: Path, filename: str
 ) -> None:
+    book_ids: list[str] = top["book_id"].drop_duplicates().tolist()
+
     # Make each book have one horizontal bar chart
     # Each chart is stacked vertically
-    book_ids: list[str] = list(top["book_id"].unique())
-    fig, axes = plt.subplots(len(book_ids), 1, figsize=(8, 3 * len(book_ids)))
+    fig: Figure = plt.figure(figsize=(8, 3 * len(book_ids)))
+    axes: list[Axes] = [
+        fig.add_subplot(len(book_ids), 1, i + 1) for i in range(len(book_ids))
+    ]
 
     for ax, book_id in zip(axes, book_ids):
         book: DataFrame = top[top["book_id"] == book_id]
 
         # Make the highest value be at the top
-        ax.barh(book["token"][::-1], book[value_col][::-1])
-        ax.set_title(book_id)
-        ax.set_xlabel(value_col)
+        _ = ax.barh(book["token"][::-1], book[value_col][::-1])
+        _ = ax.set_title(book_id)
+        _ = ax.set_xlabel(value_col)
 
     fig.tight_layout()
     fig.savefig(output_dir / filename, dpi=150)
@@ -83,17 +89,17 @@ def plot_similarity(sim: DataFrame, output_dir: Path, filename: str) -> None:
     fig, ax = plt.subplots(figsize=(6, 5))
     image = ax.imshow(sim.to_numpy(), cmap="viridis")
 
-    ax.set_xticks(range(len(sim.columns)), labels=sim.columns)
-    ax.set_yticks(range(len(sim.index)), labels=sim.index)
+    _ = ax.set_xticks(range(len(sim.columns)), labels=sim.columns)
+    _ = ax.set_yticks(range(len(sim.index)), labels=sim.index)
 
     for i in range(len(sim.index)):
         for j in range(len(sim.columns)):
-            ax.text(
+            _ = ax.text(
                 j, i, f"{sim.iat[i, j]:.2f}", ha="center", va="center", color="white"
             )
 
-    fig.colorbar(image, ax=ax, label="cosine similarity")
-    ax.set_title("TF-IDF cosine similarity between books")
+    _ = fig.colorbar(image, ax=ax, label="cosine similarity")
+    _ = ax.set_title("TF-IDF cosine similarity between books")
     fig.tight_layout()
     fig.savefig(output_dir / filename, dpi=150)
     plt.close(fig)
