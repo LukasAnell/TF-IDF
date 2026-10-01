@@ -104,6 +104,33 @@ Three filters were then applied:
     \item \textbf{Numeric tokens.} Page numbers, section numbers, and dates don't carry any meaning on their own, so any tokens that only consisted of tokens were also removed.
 \end{itemize}
 
+Stopword removal had the largest effect on the data.
+It removed about 55\% of all tokens, while only shrinking the vocabulary of the texts by about 300 words.
+
+Finally, each book's tokens were stored as a table with one row per token, and one column per book.
+Then, the five books' tables were combined into the single table used for the rest of the analysis.
+Even though the tables were combined, each row is labeled with its book, so term counts can be computed for each book, as well as statistics like the number of books that contain each term.
+Table~\ref{tab:tokens} summarized the final result.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lrr}
+        \toprule
+        Book & Tokens & Unique terms \\
+        \midrule
+        On the Origin of Species & 63,344  & 7,253  \\
+        The Descent of Man       & 120,753 & 14,335 \\
+        Evolution and Ethics     & 11,822  & 4,426  \\
+        The Data of Ethics       & 40,136  & 6,679  \\
+        Mutual Aid               & 42,422  & 9,586  \\
+        \midrule
+        All books                & 278,477 & 24,828 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Tokens and vocabulary size per book after cleaning.}
+    \label{tab:tokens}
+\end{table}
+
 \subsection{Vectorization and TF-IDF}
 Term frequency, inverse document frequency, and TF-IDF were computed with
 pandas and numpy following the definitions in the project handout:
