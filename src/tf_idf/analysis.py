@@ -57,6 +57,48 @@ def cosine_similarity(wide: DataFrame) -> DataFrame:
     return DataFrame(sim, index=wide.index, columns=wide.index)
 
 
+def plot_top_terms(
+    top: DataFrame, value_col: str, output_dir: Path, filename: str
+) -> None:
+    # Make each book have one horizontal bar chart
+    # Each chart is stacked vertically
+    book_ids: list[str] = list(top["book_id"].unique())
+    fig, axes = plt.subplots(len(book_ids), 1, figsize=(8, 3 * len(book_ids)))
+
+    for ax, book_id in zip(axes, book_ids):
+        book: DataFrame = top[top["book_id"] == book_id]
+
+        # Make the highest value be at the top
+        ax.barh(book["token"][::-1], book[value_col][::-1])
+        ax.set_title(book_id)
+        ax.set_xlabel(value_col)
+
+    fig.tight_layout()
+    fig.savefig(output_dir / filename, dpi=150)
+    plt.close(fig)
+
+
+def plot_similarity(sim: DataFrame, output_dir: Path, filename: str) -> None:
+    # Heatmap of the similarity matrix with each cell's value printed on it
+    fig, ax = plt.subplots(figsize=(6, 5))
+    image = ax.imshow(sim.to_numpy(), cmap="viridis")
+
+    ax.set_xticks(range(len(sim.columns)), labels=sim.columns)
+    ax.set_yticks(range(len(sim.index)), labels=sim.index)
+
+    for i in range(len(sim.index)):
+        for j in range(len(sim.columns)):
+            ax.text(
+                j, i, f"{sim.iat[i, j]:.2f}", ha="center", va="center", color="white"
+            )
+
+    fig.colorbar(image, ax=ax, label="cosine similarity")
+    ax.set_title("TF-IDF cosine similarity between books")
+    fig.tight_layout()
+    fig.savefig(output_dir / filename, dpi=150)
+    plt.close(fig)
+
+
 if __name__ == "__main__":
     # Root folder
     PROJECT_ROOT: Path = Path(__file__).resolve().parent
@@ -98,3 +140,7 @@ if __name__ == "__main__":
     wide: DataFrame = to_wide(tfidf_long)
     similarity: DataFrame = cosine_similarity(wide)
     print(similarity.round(3))
+
+    # Plotting
+    plot_top_terms(top_tfidf, "tfidf", figures_dir, "top_tfidf_terms.png")
+    plot_similarity(similarity, figures_dir, "tfidf_similarity.png")
