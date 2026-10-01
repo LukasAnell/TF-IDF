@@ -57,10 +57,10 @@ The five books were obtained from Project Gutenberg~\cite{gutenberg} as UTF-8 pl
 The download script uses each book's Gutenberg ID to fetch each file from its URL (\texttt{https://www.gutenberg.org/ebooks/<id>.txt.utf-8}) and saves to the \texttt{data/raw} folder in the project.
 The files are downloaded once and kept locally rather than being fetched on every run.
 
-The processing pipeline is separated into separate stages: trimming, normalization, tokenization, term frequency (TF), inverse document frequency (IDF), and TF-IDF.
+The processing pipeline is divided into stages: trimming, normalization, tokenization, term frequency (TF), inverse document frequency (IDF), and TF-IDF.
 Each stage uses the output of the previous stage and writes its results to its own output folder.
 By storing the results of each stage on disk, I was able to inspect the data between steps, which was very helpful when debugging cleaning errors.
-For example, I was able to find the hyphenation error described in Section~3.3 by comparing the trimmed and normalized versions of a book.
+For example, I was able to find the hyphenation error described in Section~\ref{sec:normalization} by comparing the trimmed and normalized versions of a book.
 
 \subsection{Text Cleaning and Trimming}
 % Removing boilerplate, trimming the Huxley work, frontmatters/tables of contents
@@ -78,22 +78,23 @@ While trimming, I also found a transcriber's note saying that the third section,
 After trimming, Huxley's text is about 163,000 characters, compared to the other books which are much longer (roughly 560,000 to 1,630,000 characters).
 
 \subsection{Normalization and Tokenization}
+\label{sec:normalization}
 % Casefolding, NFC, fix for "--" showing up, punctuation removal, stopword removal, single-character and numeric filters, word-document table
 Each trimmed book was normalized line by line. The first step in normalization was casefolding, so that, for example, ``Species'' and ``species'' count as the same word.
-They were also converted to Unicode Normalization Form C so accented characters, which appeared in some quoted names and foreign phrases in the texts, always get encoded the same way.
+Each line was also converted to Unicode Normalization Form C so accented characters, which appeared in some quoted names and foreign phrases in the texts, always get encoded the same way.
 After that, all punctuation was removed with a regular expression that deletes every character that's not a letter, digit, or whitespace.
 
 However, deleting punctuation outright caused an issue that I only detected when running analysis. The highest IDF values in the dataset included words that don't exist, such as ``strugglehas''.
 By comparing the trimmed and normalized versions of \emph{Mutual Aid}, I saw that the older transcriptions used a double hyphen instead of a dash (``struggle--has''), so deleting hyphens fused the words together.
 These double hyphens appeared in \emph{Mutual Aid}, \emph{The Data of Ethics}, and in Huxley's text, but never in either of Darwin's books.
-I fixed this bug by adding a step to replace them with a space before any of the remaining punctuation is rmeoved.
+I fixed this bug by adding a step to replace them with a space before any of the remaining punctuation is removed.
 
-I ignored single hyphens during normalization because it's normally used in these books to create compound terms.
+Single hyphens were still affected by the general punctuation rule, which deletes them and joins the two halves into one token, because they're normally used in these books to create compound terms.
 In \emph{On the Origin of Species}, this included words like ``fresh-water'', ``parent-species'', and ``sub-species''.
 Treating ``parentspecies'' as a single term does better at preserving its intended meaning, which would be lost if it were split into ``parent'' and ``species''.
-The only trade-off of this method is that a compound word written with a hyphen and the same phrase written as two words are counted as two different words during analysis.
+One trade-off of this method is that a compound word written with a hyphen and the same phrase written as two words are counted as two different words during analysis.
 
-Each normalized book was then tokenized by splitting the text on every whitespace.
+Each normalized book was then tokenized by splitting the text on whitespace.
 Three filters were then applied:
 \begin{itemize}
     \item \textbf{Stopword removal.} Common function words such as ``the'', ``of'', and ``which'' were removed using scikit-learn's English stopword list~\cite{sklearn}.
@@ -101,16 +102,16 @@ Three filters were then applied:
     Without removal, they dominated every book's term frequencies.
     \item \textbf{Single-character tokens.} \emph{The Descent of Man} cites page numbers such as ``p.~45'' more than 1,000 times.
     Once punctuation was removed during the normalization stage, the leftover ``p'' tokens became the book's most frequent terms, so I also removed all one-character tokens from the set of tokens.
-    \item \textbf{Numeric tokens.} Page numbers, section numbers, and dates don't carry any meaning on their own, so any tokens that only consisted of tokens were also removed.
+    \item \textbf{Numeric tokens.} Page numbers, section numbers, and dates don't carry any meaning on their own, so any tokens that only consisted only of digits were also removed.
 \end{itemize}
 
 Stopword removal had the largest effect on the data.
 It removed about 55\% of all tokens, while only shrinking the vocabulary of the texts by about 300 words.
 
-Finally, each book's tokens were stored as a table with one row per token, and one column per book.
+Finally, each book's tokens were stored as a table with one row per token and a column recording which book it came from.
 Then, the five books' tables were combined into the single table used for the rest of the analysis.
 Even though the tables were combined, each row is labeled with its book, so term counts can be computed for each book, as well as statistics like the number of books that contain each term.
-Table~\ref{tab:tokens} summarized the final result.
+Table~\ref{tab:tokens} summarizes the final result.
 
 \begin{table}[H]
     \centering
