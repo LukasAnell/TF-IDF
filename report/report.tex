@@ -54,10 +54,10 @@
 \subsection{Data Collection}
 % Downloading from Gutenberg, folder structure
 The five books were obtained from Project Gutenberg~\cite{gutenberg} as UTF-8 plaintext files.
-The download script uses each book's Gutenberg ID to fetch each file from (\texttt{https://www.gutenberg.org/ebooks/<id>.txt.utf-8}) and saves to the \texttt{data/raw} folder in the project.
+The download script uses each book's Gutenberg ID to fetch each file from its URL (\texttt{https://www.gutenberg.org/ebooks/<id>.txt.utf-8}) and saves to the \texttt{data/raw} folder in the project.
 The files are downloaded once and kept locally rather than being fetched on every run.
 
-The processing pipeline is separated into separate stages, trimming, normalization, tokenization, term frequency (TF), inverse document frequency (IDF), and TF-IDF.
+The processing pipeline is separated into separate stages: trimming, normalization, tokenization, term frequency (TF), inverse document frequency (IDF), and TF-IDF.
 Each stage uses the output of the previous stage and writes its results to its own output folder.
 By storing the results of each stage on disk, I was able to inspect the data between steps, which was very helpful when debugging cleaning errors.
 For example, I was able to find the hyphenation error described in Section~3.3 by comparing the trimmed and normalized versions of a book.
@@ -65,16 +65,16 @@ For example, I was able to find the hyphenation error described in Section~3.3 b
 \subsection{Text Cleaning and Trimming}
 % Removing boilerplate, trimming the Huxley work, frontmatters/tables of contents
 Some parts of the files obtained from Gutenberg are not part of the author's text, such as a license header and footer, title pages, a table of contents, and an index.
-If included in the analysis, that content would add words that say nothing about the books' content, so they were all trimmed to only be the portion of text between a start and end phrase, which I found manully for each book.
-In addition, the end phrase is only searched for after the start phrase is found in the text, which prevents the text trimming from cutting off early.
+If included in the analysis, that content would add words that say nothing about the books' content, so they were all trimmed to only be the portion of text between a start and end phrase, which I found manually for each book.
+In addition, the end phrase is only searched for after the start phrase is found in the text, which prevents the text trimming from cutting off early, since section titles such as the end phrase can also appear earlier, in the table of contents.
 
-Within the books, material that was written by the authors themselves was kept, such as introductions, prefaces, and footnotes, because are part of the main content of the book.
+Within the books, material that was written by the authors themselves was kept, such as introductions, prefaces, and footnotes, because they are part of the main content of the book.
 I considered removing chapter heading lines, but they make up such a small fraction of the book's words that they wouldn't meaningfully affect the results.
 
 The book that required the most extensive trimming was Huxley's work.
-The Gutenberg edition is actually a collection of 5 essays, and only the first two (the Prolegomena and the ``Evolution of Ethics'' lecture, with its notes) talk about the relationship between evolution and ethics.
+The Gutenberg edition is actually a collection of 5 essays, and only the first two (the Prolegomena and the ``Evolution and Ethics'' lecture, with its notes) talk about the relationship between evolution and ethics.
 The other 3 essays talk about unrelated topics like labor economics and the Salvation Army, which, if included, would have vocabulary unrelated to my comparison between evolution and ethics.
-While trimming, I also found a transcriber's note saying that the third section, ``Science and Morals'' is actually a reprint of Asa Gray's 1860 essay on Darwin, not Huxley's.
+While trimming, I also found a transcriber's note saying that the third section, ``Science and Morals,'' is actually a reprint of Asa Gray's 1860 essay on Darwin, not Huxley's.
 After trimming, Huxley's text is about 163,000 characters, compared to the other books which are much longer (roughly 560,000 to 1,630,000 characters).
 
 \subsection{Normalization and Tokenization}
