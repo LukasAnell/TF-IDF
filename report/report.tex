@@ -79,6 +79,30 @@ After trimming, Huxley's text is about 163,000 characters, compared to the other
 
 \subsection{Normalization and Tokenization}
 % Casefolding, NFC, fix for "--" showing up, punctuation removal, stopword removal, single-character and numeric filters, word-document table
+Each trimmed book was normalized line by line. The first step in normalization was casefolding, so that, for example, ``Species'' and ``species'' count as the same word.
+They were also converted to Unicode Normalization Form C so accented characters, which appeared in some quoted names and foreign phrases in the texts, always get encoded the same way.
+After that, all punctuation was removed with a regular expression that deletes every character that's not a letter, digit, or whitespace.
+
+However, deleting punctuation outright caused an issue that I only detected when running analysis. The highest IDF values in the dataset included words that don't exist, such as ``strugglehas''.
+By comparing the trimmed and normalized versions of \emph{Mutual Aid}, I saw that the older transcriptions used a double hyphen instead of a dash (``struggle--has''), so deleting hyphens fused the words together.
+These double hyphens appeared in \emph{Mutual Aid}, \emph{The Data of Ethics}, and in Huxley's text, but never in either of Darwin's books.
+I fixed this bug by adding a step to replace them with a space before any of the remaining punctuation is rmeoved.
+
+I ignored single hyphens during normalization because it's normally used in these books to create compound terms.
+In \emph{On the Origin of Species}, this included words like ``fresh-water'', ``parent-species'', and ``sub-species''.
+Treating ``parentspecies'' as a single term does better at preserving its intended meaning, which would be lost if it were split into ``parent'' and ``species''.
+The only trade-off of this method is that a compound word written with a hyphen and the same phrase written as two words are counted as two different words during analysis.
+
+Each normalized book was then tokenized by splitting the text on every whitespace.
+Three filters were then applied:
+\begin{itemize}
+    \item \textbf{Stopword removal.} Common function words such as ``the'', ``of'', and ``which'' were removed using scikit-learn's English stopword list~\cite{sklearn}.
+    These words appear in every book, but don't help with differentiating what the subject is.
+    Without removal, they dominated every book's term frequencies.
+    \item \textbf{Single-character tokens.} \emph{The Descent of Man} cites page numbers such as ``p.~45'' more than 1,000 times.
+    Once punctuation was removed during the normalization stage, the leftover ``p'' tokens became the book's most frequent terms, so I also removed all one-character tokens from the set of tokens.
+    \item \textbf{Numeric tokens.} Page numbers, section numbers, and dates don't carry any meaning on their own, so any tokens that only consisted of tokens were also removed.
+\end{itemize}
 
 \subsection{Vectorization and TF-IDF}
 Term frequency, inverse document frequency, and TF-IDF were computed with
