@@ -148,6 +148,27 @@ Then, counting how many time each unique term appears in a book gives $f(t, d)$,
 This then turns each book's table of individual tokens into a smaller table, with one row per unique term.
 Term frequency will have one value for every combination of term and book, and a given term will usually have a different term frequency for each book it appears in.
 
+By contrast, inverse document frequency has a single value per term across the whole collection of books.
+Because each book's term frequency table lists every term in that book exactly once, $n_t$, which is the number of books that contain a given term, can be found by combining the 5 tables and counting how many times each term appears.
+With $N_D = 5$ books, the IDF of each term was then computer with the natural logarithm.
+
+Finally, the frequency table and the IDF table for each book were merged based on the term, and the two values were simply multiplied to find each term's TF-IDF score in that book.
+The results of the TF, IDF, and TF-IDF steps are all saved to disk, so later analysis can reuse them without having to recompute earlier stages.
+
+Because there are only 5 books in the dataset, $n_t$ can only be between 1 and 5, so IDF can only have 5 possible values.
+\begin{center}
+\begin{tabular}{cccccc}
+    \toprule
+    Books containing the term ($n_t$) & 1 & 2 & 3 & 4 & 5 \\
+    \midrule
+    IDF & 0.916 & 0.511 & 0.223 & 0.000 & $-0.182$ \\
+    \bottomrule
+\end{tabular}
+\end{center}
+Because of the $1 +$ in the denominator of IDF, a term found in 4 of the book will have an IDF of exactly 0, and a term found in all 5 books will have an IDF that's slightly negative.
+Those terms would also have a TF-IDF of 0 or below in every book, no matter how frequent they are.
+The effect of this on the results is discussed in Section~\ref{sec:results-idf}.
+
 \subsection{Document Comparison}
 % Reshaping DataFrames to wide and cosine similarity
 \begin{equation}
@@ -166,6 +187,7 @@ Term frequency will have one value for every combination of term and book, and a
 % Significance of sorted TF values
 
 \subsection{Inverse Document Frequency}
+\label{sec:results-idf}
 % Significance of IDF values
 % lowest vs. highest, and negative ones
 
