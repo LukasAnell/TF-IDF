@@ -293,6 +293,20 @@ None of these artifacts actually change the overall picture, but they do show wh
 	\label{fig:similarity}
 \end{figure}
 
+Figure~\ref{fig:similarity} shows the cosine similarity between every pair of books.
+The two Darwin books are the most similar pair by far, with a score of 0.46.
+Every other pair in the heatmap falls between 0.19 and 0.26.
+
+The spectrum that you'd expect between science and ethics doesn't seem to appear.
+The two texts that fall into the ethics genre, Huxley's and Spencer's, are only a bit more similar to each other (0.24) than to Darwin's \emph{Origin} (0.23 for both).
+\emph{Mutual Aid} also doesn't fall between the scientific and ethical texts, and its closest match is \emph{Origin} (0.26), which is consistent with the first half of the book being about cooperation among animals.
+
+I think the most likely explanation for this lies in the IDF values.
+The vocabulary that these books share, words like ``nature'', ``life'', ``species'', and ``struggle'', is exactly the vocabulary that IDF scores at 0 or below, so it contributes to almost nothing when computing the TF-IDF vectors.
+The only words that remain after that are the books' distinctive vocabularies, and each book is distinctive in its direction, with each one being mostly about either geology, sexual selection, Buddhism, egoism, or medieval guilds.
+TF-IDF is designed to separate documents, and with only five documents that share a common subject, it just separates them about equally.
+As a result of this, only the 2 books by Darwin, which are by the same author and are about very closely related subjects, share enough distinctive vocabulary to stand out.
+
 \subsection{Exploration}
 % Maybe do tf-only similarity, bigrams, or extra books?
 
