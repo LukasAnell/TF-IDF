@@ -231,6 +231,16 @@ Term frequency does a good job at showing what a book talks about most, but it f
 % Significance of IDF values
 % lowest vs. highest, and negative ones
 
+The terms with the lowest IDF are the ones that are found in all 5 books, such as ``species'', ``forms'', ``natural'', ``plants'', and ``life''.
+These terms are some of the most commonly used words in the debate between evolution and ethics, which is likely why every book uses them.
+As described in Section~\ref{sec:tfidf}, their IDF is slightly negative, so their TF-IDF score is negative in every book.
+In the case of this dataset, ``species'', which is the most frequent term in \emph{On the Origin of Species}, scores below 0 there.
+
+By contrast, terms with the highest IDF appear in only one book.
+This includes words like ``moravian'' and ``downtrodden'' from Kropotkin's historical chapters.
+Because many terms share the maximum IDF value, their order is completely arbitrary, so IDF on its own only separates terms into five groups.
+The data will only become informative when combined with term frequency, to find TF-IDF. % roll credits
+
 \subsection{TF-IDF}
 % Highest TF-IDF term per document and what it means
 
