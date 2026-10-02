@@ -328,9 +328,6 @@ The TF-IDF method shows what makes each book unique from the others, which is wh
 In general, deciding which method is appropriate depends on whether the goal is to distinguish the documents or to group them together.
 
 \section{Conclusion}
-% Restate problem and claim
-% Talk about why my results support my claim
-% Include call for action for further research and projects
 
 This project used TF-IDF to examine five books that are connected by the question of how the theory of evolution relates to ethics.
 Two of the books are Darwin's scientific works, two are ethical works that respond to evolution, and \emph{Mutual Aid} combines biological evidence with an ethical argument.
@@ -338,23 +335,23 @@ The goal of this project was to see whether the vocabulary of these books reflec
 
 TF-IDF identified the distinctive content of each book very accurately.
 Each book's highest-scoring terms correspond to its actual subject.
-In \emph{On the Origin of Species}, the geological record and hybridism, sexual selection in \emph{The Descent of Man}, the comparison of evolution with Buddhist and Hindu philosophy in Huxley's work, Spencer's writing about egoism and altruism, and Kropotkin's subject on the history of cooperation in medieval guilds and villages.
-Cleaning and computation are shown to have been done correctly by the fact that these results match each book's subject.
+There are the geological record and hybridism in \emph{On the Origin of Species}, sexual selection in \emph{The Descent of Man}, Huxley's comparison of evolution with Buddhist and Hindu philosophy, Spencer's opposition of egoism and altruism, and Kropotkin's history of cooperation in medieval guilds and villages.
+The fact that these results match each book's known subject is the main evidence that the cleaning and computation were done correctly.
 
 However, TF-IDF didn't reveal the spectrum between science and ethics that was expected.
 Except for Darwin's two books, every pair of books was about as dissimilar as every other pair of books.
-The reason for that is because words like ``nature'', ``life'', and ``struggle'', are given an IDf value of zero or below because they appear in all five books.
-Repeating the same comparison with just term frequency also confirmed this relationship, as without IDF the ethics texts formed a pair, \emph{Mutual Aid} is between them and Darwin's books, and a gradient in similarity is formed from science to ethics.
+This is because words like ``nature'', ``life'', and ``struggle'' are given an IDf value of zero or below because they appear in all five books.
+Repeating the same comparison with just term frequency also confirmed this relationship, as without IDF the ethics texts formed a pair, \emph{Mutual Aid} fell between them and Darwin's books, and the books formed a gradient in similarity is formed from science to ethics.
 This finding shows how the relationship between the books is more in how they use a common vocabulary, rather than in distinctive words they use.
-TF-IDF is very well suited for telling documents apart, but, especially with a small dataset, it also does a good job at removing the connections that group them together.
+TF-IDF is very well suited for telling documents apart, but, especially with a small dataset, it also hides the connections that group them together.
 
 Several extensions could also strengthen these conclusions:
 \begin{itemize}
-    \item \textbf{More documents.} With only 5 books, IDF can only take 5 values, and any term found in 4 or 5 books will be automatically discarded.
+    \item \textbf{More documents.} With only 5 books, IDF can only take 5 values, and any term found in 4 or 5 books will be effectively discarded.
     A larger collection of documents, including books outside the debate of science and ethics, would help IDF separate more common English vocabulary from vocabulary that's only commonly used within the debate.
     \item \textbf{Bigrams.} Phrases like ``natural selection'' and ``mutual aid'' get each book's ideas across much more accurately than separating them into individual words, which could be shared by other books.
     \item \textbf{Stemming.} \emph{The Descent of Man}'s top terms included ``males'', ``male'', ``females'', and ``female'' as four separate terms.
-    Stemming would combine similar forms like these and give a more clear picture of what each book emphasizes.
+    Stemming would combine similar forms like these and give a clearer picture of what each book emphasizes.
     \item \textbf{Chapter-level analysis.} Treating chapters as documents could also show how arguments develop throughout a book, such as \emph{Mutual Aid}'s progression from discussing animal behavior to human history.
 \end{itemize}
 
