@@ -356,16 +356,51 @@ Several extensions could also strengthen these conclusions:
 \end{itemize}
 
 \section{Reflection}
-% Reflect on experience while completing analysis
 
 \subsection{Something I Understand Differently Now}
 
+When I started this project, not having much experience with implementing stuff like TF-IDF, I expected that to be the hardest part.
+I didn't expect the data cleaning to take such a long time.
+In reality, the TF-IDF functions were actually very quick to implement and worked without much debugging.
+Most of my time spent programming was on fixing problems with the text, such as stopwords being the top terms in each book before I implemented stopword removal.
+Even after that, I still ran into the issue of ``p'' being the most frequent term in \emph{The Descent of Man}, which was leftover from more than a thousand page citations.
+Another issue that I ran into after that was words being fused together, like ``strugglehas'', which polluted the list of highest-IDF terms instead of showing the actual rarest words.
+
+None of these bugs caused errors when running the code, but they could be seen in the analysis results that looked slightly wrong.
+When I initially saw these results, I hadn't considered that the intermediate steps could cause such large differences in the final output, so seeing these types of bugs made me think of cleaning as a part of the analysis that's just as important as the computation part.
+
 \subsection{A Decision I Made}
+
+After finding that double hyphens were causing words to be fused together, I chose to replace them with spaces.
+However, I realized that it probably wouldn't be as simple of a fix for single hyphens, because they're usually used in writing to create new types of terms, rather than being used as grammatical markers like double hyphens are.
+If I replaced them with spaces like I did for double hyphens, it would split those compound words up and lose a lot of the intended meaning behind them.
+Meanwhile, deleting them would join the two parts of the compound word into a single one, which could also be ugly.
+
+I realized that single hyphens were much more common in all five books, while double hyphens were an extremely rare case.
+In \emph{On the Origin of Species}, words like ``fresh-water'', ``parent-species'', ``sub-species'', and ``rock-pigeon'' all seem like compound terms that have meaning behind them that's more than the two words on their own.
+Because of that, I chose to just join the words together and making words like ``parentspecies'', which has a specific meaning that would be lost if it were split up into ``parent'' and ``species''.
+
+During analysis, ``breedingseason'' was listed as one of the top TF-IDF terms in \emph{The Descent of Man}, which could cause some confusion.
+I think I'd still choose to keep the words together if I were to do it again, because I think it's important to maintain the author's intended meaning when running this statistical analysis on the texts.
+I would probably find a smarter way to merge them together, because ``parentspecies'' without a hyphen looks a little ugly, but overall I think it's a better choice than splitting the words up.
 
 \subsection{A Moment of Uncertainty}
 
+When running my analysis initially, I expected the similarity scores to show a spectrum between Darwin's books and the ethics books.
+Instead, every pair of books apart from Darwin's, which scored 0.46, scored between 0.19 and 0.26.
+I wasn't really sure if that was a bug or not, because the words my analysis script listed as having the highest and lowest TF-IDF seemed like they matched the book's subject.
+
+by looking at the IDF values, I saw that words that the books shared, which included ``nature'', ``life'', and ``struggle'', all had IDF values below 0, which meant they contributed almost nothing to the final comparison.
+I ran the same comparison using only term frequency to try to fix that issue, and the gradient I expected showed up.
+
 \subsection{Looking Back}
 
+If I were starting this project again, I would probably choose more books with more varied topics.
+By only having five books, IDF could only take five different values, so any word that appeared in almost all of the books had IDF values of zero or below.
+And because all of the books in the dataset are about the same general topic, those words they shared were almost always related to that debate.
+
+Including more books in the dataset would help IDF distinguish commonly used English words from words that are only commonly used within that debate.
+A TF-IDF similarity heatmap might also show more of a spectrum with a larger dataset because of this reason.
 
 \bibliographystyle{plain}
 \bibliography{references}
