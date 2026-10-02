@@ -301,9 +301,9 @@ TF-IDF is designed to separate documents, and with only five documents that shar
 As a result of this, only the 2 books by Darwin, which are by the same author and are about very closely related subjects, share enough distinctive vocabulary to stand out.
 
 \subsection{Exploration}
-Section~\ref{sec:results-idf} suggested that the reason similarity scores between the books were so low was because IDF removes the vocabulary they have in common.
+Section~\ref{sec:results-idf} suggested that similarity scores between the books were low because IDF removes the vocabulary they have in common.
 To test that, I also computed cosine similarity using term frequency alone, without IDF weighting.
-In this version, shared terms such as ``nature'', ``life'', and ``strugle'' are able to count towards similarity instead of being cancelled out.
+In this version, shared terms such as ``nature'', ``life'', and ``struggle'' are able to count towards similarity instead of being cancelled out.
 
 \begin{figure}[H]
     \centering
@@ -314,7 +314,7 @@ In this version, shared terms such as ``nature'', ``life'', and ``strugle'' are 
 
 As expected, every similarity score is higher (Figure~\ref{fig:tf-similarity}), but the pattern shows the more important change.
 The two ethics texts, which before were barely more similar to each other than to Darwin under TF-IDF, now show a strong similarity.
-Huxley and Spencer score 0.516, and they're both the other's closest match.
+Huxley and Spencer score 0.516, and each is the other's closest match.
 \emph{Mutual Aid} falls between the two groups, scoring similarly to all 4 other books (0.436 to 0.510).
 It's closer to the Darwin books than either ethics text is, but also closer to the ethics texts than either Darwin book is.
 And as before, Darwin's 2 works are still the most similar pair (0.583).
