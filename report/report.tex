@@ -170,11 +170,22 @@ Those terms would also have a TF-IDF of 0 or below in every book, no matter how 
 The effect of this on the results is discussed in Section~\ref{sec:results-idf}.
 
 \subsection{Document Comparison}
+\label{sec:comparison}
 % Reshaping DataFrames to wide and cosine similarity
+
+To compare the different books with each other, each book's TF-IDF scores were treated as a vector.
+This meant reshaping the combined TF-IDF table from one row per term-and-book pair into a matrix, which had one row per book and one column for each term that appeared.
+Because not every book had all 24,828 terms, the matrix entries were just filled in with zero wherever they didn't have a term.
+Each book can then be expressed as a vector of 24,828 TF-IDF scores.
+
+The similarity between two books was measured using cosine similarity:
 \begin{equation}
 	\cos(\mathbf{a}, \mathbf{b}) = \frac{\mathbf{a} \cdot \mathbf{b}}{\lVert \mathbf{a} \rVert \, \lVert \mathbf{b} \rVert}
 \end{equation}
-
+Cosine similarity measures the angle between 2 vectors, ignoring their lengths.
+A score of 1 means the 2 books weight their vocabulary in exactly the same proportions, while a score close to 0 means they share almost no distinct vocabulary.
+This method of comparison suits this application because the books are quite different in length, so having a score that depends on which terms each book emphasizes rather than one how much text they contain is much better.
+The similarity was computed for every pair of books, which givse a 5 by 5 matrix.
 
 \section{Results}
 % Tie findings back to the goals in the introduction
