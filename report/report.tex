@@ -92,7 +92,7 @@ Finally, Section~\ref{sec:reflection} contains my personal reflections on the wh
 
 \subsection{Data Collection}
 The five books were obtained from Project Gutenberg~\cite{gutenberg} as UTF-8 plaintext files.
-The download script uses each book's Gutenberg ID to fetch each file from its URL (\texttt{https://www.gutenberg.org/ebooks/<id>.txt.utf-8}) and saves to the \texttt{data/raw} folder in the project.
+The download script uses each book's Gutenberg ID to fetch each file from its URL (\url{https://www.gutenberg.org/ebooks/<id>.txt.utf-8}) and saves to the \texttt{data/raw} folder in the project.
 The files are downloaded once and kept locally rather than being fetched on every run.
 
 The processing pipeline is divided into stages: trimming, normalization, tokenization, term frequency (TF), inverse document frequency (IDF), and TF-IDF.
