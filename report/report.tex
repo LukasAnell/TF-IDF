@@ -187,6 +187,15 @@ The similarity was computed for every pair of books, which gives a 5 by 5 matrix
 \subsection{Vocabulary}
 % Vocabulary size, genre-related words, effect of stopword removal on the data
 
+After the cleaning, the 5 books contain 278,477 tokens in total and 24,828 distinct terms (Table~\ref{tab:tokens}).
+The size of a given book's vocabulary mostly correlates with length, but not entirely.
+\emph{The Data of Ethics} and \emph{Mutual Aid} are almost the same length (about 40,000 and 42,000 tokens, respectively), but \emph{Mutual Aid} uses 9,586 distinct terms, while Spencer's work only uses 6,679.
+Spencer develops an abstract argument that uses a small, repeated set of concepts, while Kropotkin uses many concrete examples relating to animal behavior, history, and specific places, all of which have their own separate vocabulary for the most part.
+
+The most frequent terms can already be seen to reflect each book's general subject.
+Darwin's two books mostly contain biological vocabulary (``species'', ``varieties'', ``selection'', ``males'', ``females''), Spencer's work by the vocabulary of ethics (``conduct'', ``happiness'', ``pleasures''), and Kropotkin's by words relating to social life (``mutual'', ``village'', ``common'').
+Without stopword removal, however, these terms were overshadowed by words like ``the'', ``of'', and ``and'', which were the most frequent words in every book.
+
 \subsection{Term Frequency}
 % Significance of sorted TF values
 
