@@ -301,8 +301,31 @@ TF-IDF is designed to separate documents, and with only five documents that shar
 As a result of this, only the 2 books by Darwin, which are by the same author and are about very closely related subjects, share enough distinctive vocabulary to stand out.
 
 \subsection{Exploration}
-% Maybe do tf-only similarity, bigrams, or extra books?
+Section~\ref{sec:results-idf} suggested that the reason similarity scores between the books were so low was because IDF removes the vocabulary they have in common.
+To test that, I also computed cosine similarity using term frequency alone, without IDF weighting.
+In this version, shared terms such as ``nature'', ``life'', and ``strugle'' are able to count towards similarity instead of being cancelled out.
 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.6\linewidth]{tf_similarity.png}
+    \caption{Cosine similarity between the books' term frequency vectors, without IDF weighting.}
+    \label{fig:tf-similarity}
+\end{figure}
+
+As expected, every similarity score is higher (Figure~\ref{fig:tf-similarity}), but the pattern shows the more important change.
+The two ethics texts, which before were barely more similar to each other than to Darwin under TF-IDF, now show a strong similarity.
+Huxley and Spencer score 0.516, and they're both the other's closest match.
+\emph{Mutual Aid} falls between the two groups, scoring similarly to all 4 other books (0.436 to 0.510).
+It's closer to the Darwin books than either ethics text is, but also closer to the ethics texts than either Darwin book is.
+And as before, Darwin's 2 works are still the most similar pair (0.583).
+
+The scores also form a gradient now.
+Similarity to \emph{On the Origin of Species} falls steadily from \emph{Mutual Aid} (0.469) to Huxley (0.383) to Spencer (0.332), and this order is also seen for \emph{The Descent of Man}.
+This matches the spectrum these books were chosen to represent, with Darwin's focus on science, Kropotkin's biologically grounded argument for cooperation, Huxley's ethics written in direct response to evolution, and Spencer's more abstract ethical system.
+
+This confirms that the spectrum between science and ethics is present in the texts, but it's more present in their shared vocabulary rather than in their distinctive vocabulary.
+The TF-IDF method shows what makes each book unique from the others, which is why it separated the books almost equally, while term frequency shows how the books use a common set of vocabulary, which is where their relationship to each other appears.
+In general, deciding which method is appropriate depends on whether the goal is to distinguish the documents or to group them together.
 
 \section{Conclusion}
 % Restate problem and claim
