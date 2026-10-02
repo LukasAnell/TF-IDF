@@ -181,11 +181,8 @@ This method of comparison suits this application because the books are quite dif
 The similarity was computed for every pair of books, which gives a 5 by 5 matrix.
 
 \section{Results}
-% Tie findings back to the goals in the introduction
-% Explain what the findings mean
 
 \subsection{Vocabulary}
-% Vocabulary size, genre-related words, effect of stopword removal on the data
 
 After the cleaning, the 5 books contain 278,477 tokens in total and 24,828 distinct terms (Table~\ref{tab:tokens}).
 The size of a given book's vocabulary mostly correlates with length, but not entirely.
@@ -197,7 +194,7 @@ Darwin's two books mostly contain biological vocabulary (``species'', ``varietie
 Without stopword removal, however, these terms were overshadowed by words like ``the'', ``of'', and ``and'', which were the most frequent words in every book.
 
 \subsection{Term Frequency}
-% Significance of sorted TF values
+
 Table~\ref{tab:top-tf} lists the five most frequent terms in each book.
 
 \begin{table}[H]
@@ -228,8 +225,6 @@ Term frequency does a good job at showing what a book talks about most, but it f
 
 \subsection{Inverse Document Frequency}
 \label{sec:results-idf}
-% Significance of IDF values
-% lowest vs. highest, and negative ones
 
 The terms with the lowest IDF are the ones that are found in all 5 books, such as ``species'', ``forms'', ``natural'', ``plants'', and ``life''.
 These are some of the central words of the debate between evolution and ethics, which is why every book uses them.
@@ -237,12 +232,11 @@ As described in Section~\ref{sec:tfidf}, their IDF is slightly negative, so thei
 In the case of this dataset, ``species'', which is the most frequent term in \emph{On the Origin of Species}, scores below 0 there.
 
 By contrast, terms with the highest IDF appear in only one book.
-This includes words like ``moravian'' and ``downtrodden'' from Kropotkin's historical chapters.
+This includes words like ``silurian'', ``fossils'', and ``fossiliferous'' from Darwin's chapters on the geological record in \emph{On the Origin of Species}.
 Because many terms share the maximum IDF value, their order is completely arbitrary, so IDF on its own only separates terms into five groups.
 The data will only become informative when combined with term frequency, to find TF-IDF.
 
 \subsection{TF-IDF}
-% Highest TF-IDF term per document and what it means
 
 Figure~\ref{fig:top-tfidf} shows the 10 highest TF-IDF terms in each book, and Table~\ref{tab:top-tfidf} lists the single highest.
 
@@ -284,8 +278,6 @@ These rankings also allow us to see remaining artifacts from the source texts, s
 None of these artifacts actually change the overall picture, but they do show what the limits of the cleaning process are.
 
 \subsection{Document Similarity}
-% Talk about the cosine similarity between books
-% Does the spectrum between science and ethics show up?
 
 \begin{figure}[H]
 	\centering
