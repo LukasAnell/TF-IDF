@@ -340,7 +340,7 @@ The fact that these results match each book's known subject is the main evidence
 
 However, TF-IDF didn't reveal the spectrum between science and ethics that was expected.
 Except for Darwin's two books, every pair of books was about as dissimilar as every other pair of books.
-This is because words like ``nature'', ``life'', and ``struggle'' are given an IDf value of zero or below because they appear in all five books.
+This is because words like ``nature'', ``life'', and ``struggle'' are given an IDF value of zero or below because they appear in all five books.
 Repeating the same comparison with just term frequency also confirmed this relationship, as without IDF the ethics texts formed a pair, \emph{Mutual Aid} fell between them and Darwin's books, and the books formed a gradient in similarity is formed from science to ethics.
 This finding shows how the relationship between the books is more in how they use a common vocabulary, rather than in distinctive words they use.
 TF-IDF is very well suited for telling documents apart, but, especially with a small dataset, it also hides the connections that group them together.
@@ -359,26 +359,26 @@ Several extensions could also strengthen these conclusions:
 
 \subsection{Something I Understand Differently Now}
 
-When I started this project, not having much experience with implementing stuff like TF-IDF, I expected that to be the hardest part.
+When I started this project, not having much experience with implementing algorithms like TF-IDF, I expected that to be the hardest part.
 I didn't expect the data cleaning to take such a long time.
 In reality, the TF-IDF functions were actually very quick to implement and worked without much debugging.
 Most of my time spent programming was on fixing problems with the text, such as stopwords being the top terms in each book before I implemented stopword removal.
 Even after that, I still ran into the issue of ``p'' being the most frequent term in \emph{The Descent of Man}, which was leftover from more than a thousand page citations.
 Another issue that I ran into after that was words being fused together, like ``strugglehas'', which polluted the list of highest-IDF terms instead of showing the actual rarest words.
 
-None of these bugs caused errors when running the code, but they could be seen in the analysis results that looked slightly wrong.
+None of these bugs caused errors when running the code, but they could be seen in the analysis results that looked wrong.
 When I initially saw these results, I hadn't considered that the intermediate steps could cause such large differences in the final output, so seeing these types of bugs made me think of cleaning as a part of the analysis that's just as important as the computation part.
 
 \subsection{A Decision I Made}
 
 After finding that double hyphens were causing words to be fused together, I chose to replace them with spaces.
-However, I realized that it probably wouldn't be as simple of a fix for single hyphens, because they're usually used in writing to create new types of terms, rather than being used as grammatical markers like double hyphens are.
+However, I realized that it probably wouldn't be as simple of a fix for single hyphens, because they're usually used in writing to make new compound terms, rather than being used as grammatical markers like double hyphens are.
 If I replaced them with spaces like I did for double hyphens, it would split those compound words up and lose a lot of the intended meaning behind them.
-Meanwhile, deleting them would join the two parts of the compound word into a single one, which could also be ugly.
+Meanwhile, deleting them would join the two parts of the compound word into a single one, which could also be harder to read.
 
-I realized that single hyphens were much more common in all five books, while double hyphens were an extremely rare case.
+I realized that single hyphens were much more common in all five books, while double hyphens never appeared in either Darwin book, which suggested they were being used differently.
 In \emph{On the Origin of Species}, words like ``fresh-water'', ``parent-species'', ``sub-species'', and ``rock-pigeon'' all seem like compound terms that have meaning behind them that's more than the two words on their own.
-Because of that, I chose to just join the words together and making words like ``parentspecies'', which has a specific meaning that would be lost if it were split up into ``parent'' and ``species''.
+Because of that, I chose to just join the words together and make words like ``parentspecies'', which has a specific meaning that would be lost if it were split up into ``parent'' and ``species''.
 
 During analysis, ``breedingseason'' was listed as one of the top TF-IDF terms in \emph{The Descent of Man}, which could cause some confusion.
 I think I'd still choose to keep the words together if I were to do it again, because I think it's important to maintain the author's intended meaning when running this statistical analysis on the texts.
@@ -390,13 +390,14 @@ When running my analysis initially, I expected the similarity scores to show a s
 Instead, every pair of books apart from Darwin's, which scored 0.46, scored between 0.19 and 0.26.
 I wasn't really sure if that was a bug or not, because the words my analysis script listed as having the highest and lowest TF-IDF seemed like they matched the book's subject.
 
-by looking at the IDF values, I saw that words that the books shared, which included ``nature'', ``life'', and ``struggle'', all had IDF values below 0, which meant they contributed almost nothing to the final comparison.
-I ran the same comparison using only term frequency to try to fix that issue, and the gradient I expected showed up.
+By looking at the IDF values, I saw that words that the books shared, which included ``nature'', ``life'', and ``struggle'', all had IDF values below 0, which meant they contributed almost nothing to the final comparison.
+I ran the same comparison using only term frequency to test that explanation, and the gradient I expected showed up.
+Through my exploration, I learned that the lack of an actual gradient in the TF-IDF similarity graph was actually an important finding that helped me explore the data even more.
 
 \subsection{Looking Back}
 
 If I were starting this project again, I would probably choose more books with more varied topics.
-By only having five books, IDF could only take five different values, so any word that appeared in almost all of the books had IDF values of zero or below.
+With only five books, IDF could only take five different values, so any word that appeared in almost all of the books had IDF values of zero or below.
 And because all of the books in the dataset are about the same general topic, those words they shared were almost always related to that debate.
 
 Including more books in the dataset would help IDF distinguish commonly used English words from words that are only commonly used within that debate.
