@@ -49,10 +49,8 @@
 
 
 \section{Methodology}
-% What I did and why
 
 \subsection{Data Collection}
-% Downloading from Gutenberg, folder structure
 The five books were obtained from Project Gutenberg~\cite{gutenberg} as UTF-8 plaintext files.
 The download script uses each book's Gutenberg ID to fetch each file from its URL (\texttt{https://www.gutenberg.org/ebooks/<id>.txt.utf-8}) and saves to the \texttt{data/raw} folder in the project.
 The files are downloaded once and kept locally rather than being fetched on every run.
@@ -63,7 +61,6 @@ By storing the results of each stage on disk, I was able to inspect the data bet
 For example, I was able to find the hyphenation error described in Section~\ref{sec:normalization} by comparing the trimmed and normalized versions of a book.
 
 \subsection{Text Cleaning and Trimming}
-% Removing boilerplate, trimming the Huxley work, frontmatters/tables of contents
 Some parts of the files obtained from Gutenberg are not part of the author's text, such as a license header and footer, title pages, a table of contents, and an index.
 If included in the analysis, that content would add words that say nothing about the books' content, so they were all trimmed to only be the portion of text between a start and end phrase, which I found manually for each book.
 In addition, the end phrase is only searched for after the start phrase is found in the text, which prevents the text trimming from cutting off early, since section titles such as the end phrase can also appear earlier, in the table of contents.
@@ -79,7 +76,6 @@ After trimming, Huxley's text is about 163,000 characters, compared to the other
 
 \subsection{Normalization and Tokenization}
 \label{sec:normalization}
-% Casefolding, NFC, fix for "--" showing up, punctuation removal, stopword removal, single-character and numeric filters, word-document table
 Each trimmed book was normalized line by line. The first step in normalization was casefolding, so that, for example, ``Species'' and ``species'' count as the same word.
 Each line was also converted to Unicode Normalization Form C so accented characters, which appeared in some quoted names and foreign phrases in the texts, always get encoded the same way.
 After that, all punctuation was removed with a regular expression that deletes every character that's not a letter, digit, or whitespace.
@@ -141,18 +137,16 @@ pandas and numpy following the definitions in the project handout:
 	\mathrm{idf}(t, D)      & = \log\!\left(\frac{N_D}{1 + n_t}\right)     \\
 	\mathrm{tfidf}(t, d, D) & = \mathrm{tf}(t, d) \cdot \mathrm{idf}(t, D)
 \end{align}
-% Explain how each step was implemented
-% Note that numpy.log is base e
 Each book's term frequency was computed separately.
-Then, counting how many time each unique term appears in a book gives $f(t, d)$, and dividing every term count by the book's total number of terms gives $\mathrm{tf}(t, d)$.
+Counting how many times each unique term appears in a book gives $f(t, d)$, and dividing every term count by the book's total number of tokens gives $\mathrm{tf}(t, d)$.
 This then turns each book's table of individual tokens into a smaller table, with one row per unique term.
 Term frequency will have one value for every combination of term and book, and a given term will usually have a different term frequency for each book it appears in.
 
 By contrast, inverse document frequency has a single value per term across the whole collection of books.
 Because each book's term frequency table lists every term in that book exactly once, $n_t$, which is the number of books that contain a given term, can be found by combining the 5 tables and counting how many times each term appears.
-With $N_D = 5$ books, the IDF of each term was then computer with the natural logarithm.
+With $N_D = 5$ books, the IDF of each term was then computed with the natural logarithm.
 
-Finally, the frequency table and the IDF table for each book were merged based on the term, and the two values were simply multiplied to find each term's TF-IDF score in that book.
+Finally, each book's term frequency table was merged with the shared IDF table based on the term, and the two values were simply multiplied to find each term's TF-IDF score in that book.
 The results of the TF, IDF, and TF-IDF steps are all saved to disk, so later analysis can reuse them without having to recompute earlier stages.
 
 Because there are only 5 books in the dataset, $n_t$ can only be between 1 and 5, so IDF can only have 5 possible values.
@@ -165,13 +159,12 @@ Because there are only 5 books in the dataset, $n_t$ can only be between 1 and 5
     \bottomrule
 \end{tabular}
 \end{center}
-Because of the $1 +$ in the denominator of IDF, a term found in 4 of the book will have an IDF of exactly 0, and a term found in all 5 books will have an IDF that's slightly negative.
+Because of the $1 +$ in the denominator of IDF, a term found in 4 of the books will have an IDF of exactly 0, and a term found in all 5 books will have an IDF that's slightly negative.
 Those terms would also have a TF-IDF of 0 or below in every book, no matter how frequent they are.
 The effect of this on the results is discussed in Section~\ref{sec:results-idf}.
 
 \subsection{Document Comparison}
 \label{sec:comparison}
-% Reshaping DataFrames to wide and cosine similarity
 
 To compare the different books with each other, each book's TF-IDF scores were treated as a vector.
 This meant reshaping the combined TF-IDF table from one row per term-and-book pair into a matrix, which had one row per book and one column for each term that appeared.
@@ -183,9 +176,9 @@ The similarity between two books was measured using cosine similarity:
 	\cos(\mathbf{a}, \mathbf{b}) = \frac{\mathbf{a} \cdot \mathbf{b}}{\lVert \mathbf{a} \rVert \, \lVert \mathbf{b} \rVert}
 \end{equation}
 Cosine similarity measures the angle between 2 vectors, ignoring their lengths.
-A score of 1 means the 2 books weight their vocabulary in exactly the same proportions, while a score close to 0 means they share almost no distinct vocabulary.
-This method of comparison suits this application because the books are quite different in length, so having a score that depends on which terms each book emphasizes rather than one how much text they contain is much better.
-The similarity was computed for every pair of books, which givse a 5 by 5 matrix.
+A score of 1 means the 2 books weight their vocabulary in exactly the same proportions, while a score close to 0 means they share almost no distinctive vocabulary.
+This method of comparison suits this application because the books are quite different in length, so having a score that depends on which terms each book emphasizes rather than on how much text they contain is much better.
+The similarity was computed for every pair of books, which gives a 5 by 5 matrix.
 
 \section{Results}
 % Tie findings back to the goals in the introduction
