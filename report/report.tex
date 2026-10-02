@@ -193,7 +193,7 @@ The size of a given book's vocabulary mostly correlates with length, but not ent
 Spencer develops an abstract argument that uses a small, repeated set of concepts, while Kropotkin uses many concrete examples relating to animal behavior, history, and specific places, all of which have their own separate vocabulary for the most part.
 
 The most frequent terms can already be seen to reflect each book's general subject.
-Darwin's two books mostly contain biological vocabulary (``species'', ``varieties'', ``selection'', ``males'', ``females''), Spencer's work by the vocabulary of ethics (``conduct'', ``happiness'', ``pleasures''), and Kropotkin's by words relating to social life (``mutual'', ``village'', ``common'').
+Darwin's two books mostly contain biological vocabulary (``species'', ``varieties'', ``selection'', ``males'', ``females''), Spencer's work mostly contains the vocabulary of ethics (``conduct'', ``happiness'', ``pleasures''), and Kropotkin's, words relating to social life (``mutual'', ``village'', ``common'').
 Without stopword removal, however, these terms were overshadowed by words like ``the'', ``of'', and ``and'', which were the most frequent words in every book.
 
 \subsection{Term Frequency}
@@ -218,7 +218,7 @@ Table~\ref{tab:top-tf} lists the five most frequent terms in each book.
 \end{table}
 
 Sorted term frequencies, in a way, give a quick summary of each book.
-``Species'' alone makes up 2.3\% of all terms in \emph{On the Origin of Species}, which is more than three times the next most frequent term, and makes sense for a book written around a single question.
+``Species'' alone makes up 2.3\% of all tokens in \emph{On the Origin of Species}, which is more than three times the next most frequent term, and makes sense for a book written around a single question.
 \emph{The Descent of Man}'s top terms are almost all about sex, which reflects the fact that most of the book is actually about sexual selection, rather than about human origins as its title suggests.
 Huxley's most frequent terms (``nature'', ``existence'', ``process'') are more general and abstract, which matches the essay's philosophical treatment of the ``cosmic process'' of evolution.
 
@@ -232,14 +232,14 @@ Term frequency does a good job at showing what a book talks about most, but it f
 % lowest vs. highest, and negative ones
 
 The terms with the lowest IDF are the ones that are found in all 5 books, such as ``species'', ``forms'', ``natural'', ``plants'', and ``life''.
-These terms are some of the most commonly used words in the debate between evolution and ethics, which is likely why every book uses them.
+These are some of the central words of the debate between evolution and ethics, which is why every book uses them.
 As described in Section~\ref{sec:tfidf}, their IDF is slightly negative, so their TF-IDF score is negative in every book.
 In the case of this dataset, ``species'', which is the most frequent term in \emph{On the Origin of Species}, scores below 0 there.
 
 By contrast, terms with the highest IDF appear in only one book.
 This includes words like ``moravian'' and ``downtrodden'' from Kropotkin's historical chapters.
 Because many terms share the maximum IDF value, their order is completely arbitrary, so IDF on its own only separates terms into five groups.
-The data will only become informative when combined with term frequency, to find TF-IDF. % roll credits
+The data will only become informative when combined with term frequency, to find TF-IDF.
 
 \subsection{TF-IDF}
 % Highest TF-IDF term per document and what it means
@@ -270,14 +270,15 @@ Figure~\ref{fig:top-tfidf} shows the 10 highest TF-IDF terms in each book, and T
     \label{tab:top-tfidf}
 \end{table}
 
-Compared to raw term frequency, TF-IDF produces much more distinctive terms..
+Compared to raw term frequency, TF-IDF produces much more distinctive terms.
 Each book's top terms show that work's particular contribution.
-In \emph{Origin}, Darwin's main evidence is geological ``formations'' and ``hybrids'', \emph{Descent} uses ``males'', ``females'', ``ornaments'', and ``plumage'', and words like ``cosmic'', ``karma'', and ``nirvana'' show Huxley's comparison between evolution and Buddhist and Hindu philosophy.
+In \emph{Origin}, ``formations'' and ``hybrids'' reflect Darwin's chapters on the geological record and on hybridism.
+\emph{Descent} uses ``males'', ``females'', ``ornaments'', and ``plumage'', and words like ``cosmic'', ``karma'', and ``nirvana'' show Huxley's comparison between evolution and Buddhist and Hindu philosophy.
 In addition, Spencer's work uses words like ``altruism'' and ``egoism'' to advance his central question, while Kropotkin mentions ``medieval'', ``guilds'', and ``communal'' to talk about the history of cooperation.
 By using TF-IDF, the general terms that were common among every book, such as ``species'' and ``life'', have fully disappeared.
 
 Huxley's top score of 0.00519 is about twice as high as any other book's.
-This is because Huxley's work is much shorter than the others, so each repetition of a term will make up a larger share of all of the tokens in that book.
+This is likely because Huxley's essay is short and focused on a single theme, the `cosmic process', while the longer books cover many topics, which spreads their tokens across more terms.
 
 These rankings also allow us to see remaining artifacts from the source texts, such as ``fig'' from figure references in \emph{Descent}, ``shewn'' (Darwin's spelling of ``shown''), the names of cited authors such as ``gärtner'' or ``rhys davids'', and ``breedingseason'', which was produced by the hyphen-joining rule that's described in Section~\ref{sec:normalization}.
 None of these artifacts actually change the overall picture, but they do show what the limits of the cleaning process are.
@@ -297,13 +298,13 @@ Figure~\ref{fig:similarity} shows the cosine similarity between every pair of bo
 The two Darwin books are the most similar pair by far, with a score of 0.46.
 Every other pair in the heatmap falls between 0.19 and 0.26.
 
-The spectrum that you'd expect between science and ethics doesn't seem to appear.
+The expected spectrum between science and ethics doesn't seem to appear.
 The two texts that fall into the ethics genre, Huxley's and Spencer's, are only a bit more similar to each other (0.24) than to Darwin's \emph{Origin} (0.23 for both).
-\emph{Mutual Aid} also doesn't fall between the scientific and ethical texts, and its closest match is \emph{Origin} (0.26), which is consistent with the first half of the book being about cooperation among animals.
+\emph{Mutual Aid} also doesn't fall between the scientific and ethical texts, and its closest match is \emph{Origin} (0.26), which is consistent with the opening chapters of the book being about cooperation among animals.
 
 I think the most likely explanation for this lies in the IDF values.
-The vocabulary that these books share, words like ``nature'', ``life'', ``species'', and ``struggle'', is exactly the vocabulary that IDF scores at 0 or below, so it contributes to almost nothing when computing the TF-IDF vectors.
-The only words that remain after that are the books' distinctive vocabularies, and each book is distinctive in its direction, with each one being mostly about either geology, sexual selection, Buddhism, egoism, or medieval guilds.
+The vocabulary that these books share, words like ``nature'', ``life'', ``species'', and ``struggle'', is exactly the vocabulary that IDF scores at 0 or below, so it contributes almost nothing when computing the TF-IDF vectors.
+The only words that remain after that are the books' distinctive vocabularies, and each book is distinctive in its own direction, with each one being mostly about either geology, sexual selection, Buddhism, egoism, or medieval guilds.
 TF-IDF is designed to separate documents, and with only five documents that share a common subject, it just separates them about equally.
 As a result of this, only the 2 books by Darwin, which are by the same author and are about very closely related subjects, share enough distinctive vocabulary to stand out.
 
