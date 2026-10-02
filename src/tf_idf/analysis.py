@@ -42,10 +42,11 @@ def idf_extremes(idf_df: DataFrame, n: int) -> tuple[DataFrame, DataFrame]:
     return lowest, highest
 
 
-def to_wide(tfidf_long: DataFrame) -> DataFrame:
+def to_wide(long: DataFrame, value_col: str) -> DataFrame:
     # Pivot DataFrame so each row is one book, and each column is one token
+    # value_col picks which score fills the matrix
     # If a book doesn't have a given token, store as 0
-    return tfidf_long.pivot(index="book_id", columns="token", values="tfidf").fillna(0)
+    return long.pivot(index="book_id", columns="token", values=value_col).fillna(0)
 
 
 def cosine_similarity(wide: DataFrame) -> DataFrame:
@@ -84,7 +85,9 @@ def plot_top_terms(
     plt.close(fig)
 
 
-def plot_similarity(sim: DataFrame, output_dir: Path, filename: str) -> None:
+def plot_similarity(
+    sim: DataFrame, title: str, output_dir: Path, filename: str
+) -> None:
     # Heatmap of the similarity matrix with each cell's value printed on it
     fig, ax = plt.subplots(figsize=(6, 5))
     image = ax.imshow(sim.to_numpy(), cmap="viridis")
@@ -99,7 +102,7 @@ def plot_similarity(sim: DataFrame, output_dir: Path, filename: str) -> None:
             )
 
     _ = fig.colorbar(image, ax=ax, label="cosine similarity")
-    _ = ax.set_title("TF-IDF cosine similarity between books")
+    _ = ax.set_title(title)
     fig.tight_layout()
     fig.savefig(output_dir / filename, dpi=150)
     plt.close(fig)
@@ -143,10 +146,26 @@ if __name__ == "__main__":
     print(top_tfidf)
 
     # Compare books as vectors using cosine similarity
-    wide: DataFrame = to_wide(tfidf_long)
+    wide: DataFrame = to_wide(tfidf_long, "tfidf")
     similarity: DataFrame = cosine_similarity(wide)
     print(similarity.round(3))
 
+    # Same comparison but only tf
+    tf_wide: DataFrame = to_wide(tf_long, "tf")
+    tf_similarity: DataFrame = cosine_similarity(tf_wide)
+    print(tf_similarity.round(3))
+
     # Plotting
     plot_top_terms(top_tfidf, "tfidf", figures_dir, "top_tfidf_terms.png")
-    plot_similarity(similarity, figures_dir, "tfidf_similarity.png")
+    plot_similarity(
+        similarity,
+        "TF-IDF cosine similarity between books",
+        figures_dir,
+        "tfidf_similarity.png",
+    )
+    plot_similarity(
+        tf_similarity,
+        "TF cosine similarity between books",
+        figures_dir,
+        "tf_similarity.png",
+    )
