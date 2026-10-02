@@ -198,6 +198,33 @@ Without stopword removal, however, these terms were overshadowed by words like `
 
 \subsection{Term Frequency}
 % Significance of sorted TF values
+Table~\ref{tab:top-tf} lists the five most frequent terms in each book.
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lll}
+        \toprule
+        Book & Top five terms by TF \\
+        \midrule
+        Origin of Species    & species, varieties, forms, selection, natural \\
+        Descent of Man       & males, male, female, species, females \\
+        Evolution and Ethics & nature, existence, man, state, process \\
+        Data of Ethics       & conduct, life, happiness, pleasures, actions \\
+        Mutual Aid           & life, mutual, village, common, new \\
+        \bottomrule
+    \end{tabular}
+    \caption{Most frequent terms in each book after cleaning.}
+    \label{tab:top-tf}
+\end{table}
+
+Sorted term frequencies, in a way, give a quick summary of each book.
+``Species'' alone makes up 2.3\% of all terms in \emph{On the Origin of Species}, which is more than three times the next most frequent term, and makes sense for a book written around a single question.
+\emph{The Descent of Man}'s top terms are almost all about sex, which reflects the fact that most of the book is actually about sexual selection, rather than about human origins as its title suggests.
+Huxley's most frequent terms (``nature'', ``existence'', ``process'') are more general and abstract, which matches the essay's philosophical treatment of the ``cosmic process'' of evolution.
+
+However, term frequency on its own has a clear weakness, which is the fact that several top terms are shared across books.
+``Species'' is a top term in both Darwin books, and ``life'' is in both \emph{The Data of Ethics} and \emph{Mutual Aid}.
+Term frequency does a good job at showing what a book talks about most, but it fails to show what distinguishes it from the other books.
 
 \subsection{Inverse Document Frequency}
 \label{sec:results-idf}
