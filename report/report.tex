@@ -244,12 +244,43 @@ The data will only become informative when combined with term frequency, to find
 \subsection{TF-IDF}
 % Highest TF-IDF term per document and what it means
 
+Figure~\ref{fig:top-tfidf} shows the 10 highest TF-IDF terms in each book, and Table~\ref{tab:top-tfidf} lists the single highest.
+
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=\linewidth,height=0.8\textheight,keepaspectratio]{top_tfidf_terms.png}
 	\caption{Top ten TF-IDF terms for each book.}
 	\label{fig:top-tfidf}
 \end{figure}
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{llr}
+        \toprule
+        Book & Highest TF-IDF term & Score \\
+        \midrule
+        Origin of Species    & formations & 0.00127 \\
+        Descent of Man       & males      & 0.00219 \\
+        Evolution and Ethics & cosmic     & 0.00519 \\
+        Data of Ethics       & altruism   & 0.00233 \\
+        Mutual Aid           & village    & 0.00255 \\
+        \bottomrule
+    \end{tabular}
+    \caption{Highest TF-IDF term in each book.}
+    \label{tab:top-tfidf}
+\end{table}
+
+Compared to raw term frequency, TF-IDF produces much more distinctive terms..
+Each book's top terms show that work's particular contribution.
+In \emph{Origin}, Darwin's main evidence is geological ``formations'' and ``hybrids'', \emph{Descent} uses ``males'', ``females'', ``ornaments'', and ``plumage'', and words like ``cosmic'', ``karma'', and ``nirvana'' show Huxley's comparison between evolution and Buddhist and Hindu philosophy.
+In addition, Spencer's work uses words like ``altruism'' and ``egoism'' to advance his central question, while Kropotkin mentions ``medieval'', ``guilds'', and ``communal'' to talk about the history of cooperation.
+By using TF-IDF, the general terms that were common among every book, such as ``species'' and ``life'', have fully disappeared.
+
+Huxley's top score of 0.00519 is about twice as high as any other book's.
+This is because Huxley's work is much shorter than the others, so each repetition of a term will make up a larger share of all of the tokens in that book.
+
+These rankings also allow us to see remaining artifacts from the source texts, such as ``fig'' from figure references in \emph{Descent}, ``shewn'' (Darwin's spelling of ``shown''), the names of cited authors such as ``gärtner'' or ``rhys davids'', and ``breedingseason'', which was produced by the hyphen-joining rule that's described in Section~\ref{sec:normalization}.
+None of these artifacts actually change the overall picture, but they do show what the limits of the cleaning process are.
 
 \subsection{Document Similarity}
 % Talk about the cosine similarity between books
