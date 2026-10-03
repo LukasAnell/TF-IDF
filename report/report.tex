@@ -40,10 +40,10 @@ My goal with this project was to test whether the vocabulary used within the boo
     The two texts on ethics have a score of 0.52, \emph{Mutual Aid} is about halfway between them and Darwin's books, and the similarity score appears to decrease steadily from Kropotkin to Huxley to Spencer.
     \item \textbf{Text cleaning difficulties.}
     There were many problems in the original texts, such as double hyphens being used as dashes and page citations which produced muddled and confusing data, but didn't cause any actual errors.
-    These were only found out by inspecting the outputs of each cleaning step.
+    These were only found by inspecting the outputs of each cleaning step.
     \item \textbf{Recommendations.}
     I found that TF-IDF is better suited to distinguishing documents, but does not do well at grouping related documents, especially with such a small dataset that focuses on one subject.
-    Instead, using unweighted term frequency in thise case does a better job at finding similarities between books.
+    Instead, using unweighted term frequency in this case does a better job at finding similarities between books.
     Including more varied books in the dataset would also make IDF more effective at grouping them.
 \end{itemize}
 
@@ -121,7 +121,7 @@ Each line was also converted to Unicode Normalization Form C so accented charact
 After that, all punctuation was removed with a regular expression that deletes every character that's not a letter, digit, or whitespace.
 
 However, deleting punctuation outright caused an issue that I only detected when running analysis. The highest IDF values in the dataset included words that don't exist, such as ``strugglehas''.
-By comparing the trimmed and normalized versions of \emph{Mutual Aid}, I saw that the older transcriptions used a double hyphen instead of a dash (``struggle--has''), so deleting hyphens fused the words together.
+By comparing the trimmed and normalized versions of \emph{Mutual Aid}, I saw that the older transcriptions used a double hyphen instead of a dash (``struggle-{}-has''), so deleting hyphens fused the words together.
 These double hyphens appeared in \emph{Mutual Aid}, \emph{The Data of Ethics}, and in Huxley's text, but never in either of Darwin's books.
 I fixed this bug by adding a step to replace them with a space before any of the remaining punctuation is removed.
 
@@ -138,7 +138,7 @@ Three filters were then applied:
     Without removal, they dominated every book's term frequencies.
     \item \textbf{Single-character tokens.} \emph{The Descent of Man} cites page numbers such as ``p.~45'' more than 1,000 times.
     Once punctuation was removed during the normalization stage, the leftover ``p'' tokens became the book's most frequent terms, so I also removed all one-character tokens from the set of tokens.
-    \item \textbf{Numeric tokens.} Page numbers, section numbers, and dates don't carry any meaning on their own, so any tokens that only consisted only of digits were also removed.
+    \item \textbf{Numeric tokens.} Page numbers, section numbers, and dates don't carry any meaning on their own, so any tokens that only consisted of digits were also removed.
 \end{itemize}
 
 Stopword removal had the largest effect on the data.
@@ -319,6 +319,7 @@ These rankings also allow us to see remaining artifacts from the source texts, s
 None of these artifacts actually change the overall picture, but they do show what the limits of the cleaning process are.
 
 \subsection{Document Similarity}
+\label{sec:similarity}
 
 \begin{figure}[H]
 	\centering
@@ -342,7 +343,7 @@ TF-IDF is designed to separate documents, and with only five documents that shar
 As a result of this, only the 2 books by Darwin, which are by the same author and are about very closely related subjects, share enough distinctive vocabulary to stand out.
 
 \subsection{Exploration}
-Section~\ref{sec:results-idf} suggested that similarity scores between the books were low because IDF removes the vocabulary they have in common.
+Section~\ref{sec:similarity} suggested that similarity scores between the books were low because IDF removes the vocabulary they have in common.
 To test that, I also computed cosine similarity using term frequency alone, without IDF weighting.
 In this version, shared terms such as ``nature'', ``life'', and ``struggle'' are able to count towards similarity instead of being cancelled out.
 
@@ -377,13 +378,13 @@ The goal of this project was to see whether the vocabulary of these books reflec
 
 TF-IDF identified the distinctive content of each book very accurately.
 Each book's highest-scoring terms correspond to its actual subject.
-There are the geological record and hybridism in \emph{On the Origin of Species}, sexual selection in \emph{The Descent of Man}, Huxley's comparison of evolution with Buddhist and Hindu philosophy, Spencer's opposition of egoism and altruism, and Kropotkin's history of cooperation in medieval guilds and villages.
+These are the geological record and hybridism in \emph{On the Origin of Species}, sexual selection in \emph{The Descent of Man}, Huxley's comparison of evolution with Buddhist and Hindu philosophy, Spencer's opposition of egoism and altruism, and Kropotkin's history of cooperation in medieval guilds and villages.
 The fact that these results match each book's known subject is the main evidence that the cleaning and computation were done correctly.
 
 However, TF-IDF didn't reveal the spectrum between science and ethics that was expected.
 Except for Darwin's two books, every pair of books was about as dissimilar as every other pair of books.
 This is because words like ``nature'', ``life'', and ``struggle'' are given an IDF value of zero or below because they appear in all five books.
-Repeating the same comparison with just term frequency also confirmed this relationship, as without IDF the ethics texts formed a pair, \emph{Mutual Aid} fell between them and Darwin's books, and the books formed a gradient in similarity is formed from science to ethics.
+Repeating the same comparison with just term frequency also confirmed this relationship, as without IDF the ethics texts formed a pair, \emph{Mutual Aid} fell between them and Darwin's books, and the books formed a gradient in similarity from science to ethics.
 This finding shows how the relationship between the books is more in how they use a common vocabulary, rather than in distinctive words they use.
 TF-IDF is very well suited for telling documents apart, but, especially with a small dataset, it also hides the connections that group them together.
 
@@ -431,7 +432,7 @@ I would probably find a smarter way to merge them together, because ``parentspec
 
 When running my analysis initially, I expected the similarity scores to show a spectrum between Darwin's books and the ethics books.
 Instead, every pair of books apart from Darwin's, which scored 0.46, scored between 0.19 and 0.26.
-I wasn't really sure if that was a bug or not, because the words my analysis script listed as having the highest and lowest TF-IDF seemed like they matched the book's subject.
+I wasn't really sure if that was a bug or not, because the words my analysis script listed as having the highest and lowest TF-IDF seemed like they matched the books subject.
 
 By looking at the IDF values, I saw that words that the books shared, which included ``nature'', ``life'', and ``struggle'', all had IDF values below 0, which meant they contributed almost nothing to the final comparison.
 I ran the same comparison using only term frequency to test that explanation, and the gradient I expected showed up.
