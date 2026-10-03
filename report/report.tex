@@ -31,16 +31,16 @@ My goal with this project was to test whether the vocabulary used within the boo
 
 \begin{itemize}
     \item \textbf{TF-IDF accurately identifies what makes each book distinctive.}
-    Each book's top terms, ranked by TF-IDF value, match it's subject very accurately, such as ``males'' and ``females'' for the topic of sexual selection in \emph{The Descent of Man} or ``village'' and ``guilds'' for Kropotkin's history of cooperation.
+    Each book's top terms, ranked by TF-IDF value, match its subject very accurately, such as ``males'' and ``females'' for the topic of sexual selection in \emph{The Descent of Man} or ``village'' and ``guilds'' for Kropotkin's history of cooperation.
     \item \textbf{The expected spectrum doesn't appear when comparing TF-IDF.}
     Apart from Darwin's two books, which had a similarity of 0.46, every other pair of books scored between 0.19 and 0.26.
-    Words like ``nature'', ``life'', and ``strugle'', which were commonly used in all five books, received IDF values of zero or below, which meant they didn't count toward similarity.
-    \item \textbf{Scoring similarity by term frequency.}
+    Words like ``nature'', ``life'', and ``struggle'', which were commonly used in all five books, received IDF values of zero or below, which meant they didn't count toward similarity.
+    \item \textbf{Scoring similarity by term frequency does show the spectrum.}
     Without IDF, the spectrum does show up.
     The two texts on ethics have a score of 0.52, \emph{Mutual Aid} is about halfway between them and Darwin's books, and the similarity score appears to decrease steadily from Kropotkin to Huxley to Spencer.
-    \item \textbf{Text cleaning.}
+    \item \textbf{Text cleaning difficulties.}
     There were many problems in the original texts, such as double hyphens being used as dashes and page citations which produced muddled and confusing data, but didn't cause any actual errors.
-    I only found out about these errors when running my analysis for the first time.
+    These were only found out by inspecting the outputs of each cleaning step.
     \item \textbf{Recommendations.}
     I found that TF-IDF is better suited to distinguishing documents, but does not do well at grouping related documents, especially with such a small dataset that focuses on one subject.
     Instead, using unweighted term frequency in thise case does a better job at finding similarities between books.
@@ -59,11 +59,11 @@ This project analyzes five central texts to this debate, which I obtained for fr
 		\toprule
 		ID    & Title                    & Author          & Year & Role in comparison \\
 		\midrule
-		1228  & On the Origin of Species & Charles Darwin  & 1859 & Pure science & the baseline of the debate \\
-		2300  & The Descent of Man       & Charles Darwin  & 1871 & The origin of morality & extending evolutionary science to humans \\
+		1228  & On the Origin of Species & Charles Darwin  & 1859 & Pure science \& the baseline of the debate \\
+		2300  & The Descent of Man       & Charles Darwin  & 1871 & The origin of morality \& extending evolutionary science to humans \\
 		2940  & Evolution and Ethics     & T.\,H.\ Huxley  & 1893 & Ethics that argues against deriving morality from evolution \\
 		46129 & The Data of Ethics       & Herbert Spencer & 1879 & Ethics built on evolution \\
-		4341  & Mutual Aid               & Peter Kropotkin & 1902 & About cooperation & using biological evidence to build the ethical argument \\
+		4341  & Mutual Aid               & Peter Kropotkin & 1902 & About cooperation \& using biological evidence to build the ethical argument \\
 		\bottomrule
 	\end{tabular}
 	\caption{Documents analyzed (Project Gutenberg's plaintext editions).}
@@ -75,16 +75,16 @@ Darwin's two books are scientific, Huxley's and Spencer's focus on ethics while 
 
 The goal of this project is to measure how these books relate to one another using TF-IDF.
 TF-IDF's purpose is to turn the text in the books into vectors that can be compared.
-More specifically, TF-IDF is especially useful when asking questions like:
+More specifically, this project asks:
 \begin{itemize}
     \item Which terms are most distinctive in each book, and do they reflect the subject discussed?
     \item How similar is each book to every other book, and can the differences between science and ethics be seen in that similarity?
 \end{itemize}
 
-Section~\ref{sec:methodology} describes how each of the texts were cleaned, as well as how the steps of TF-IDF and cosine similarity were computed.
+Section~\ref{sec:methodology} describes how each of the texts was cleaned, as well as how the steps of TF-IDF and cosine similarity were computed.
 Section~\ref{sec:results} uses data extracted during analysis to discuss the most frequent and the most distinctive terms in each book.
 Beyond that, the similarity between each book is also discussed, and there's a section about how the books were compared using only term frequency when initial results were not what was expected.
-Section~\ref{sec:conclusion} goes on to summarize my findings throughout the project, as well as talking about some potential extensions for that project that could yield more useful information.
+Section~\ref{sec:conclusion} goes on to summarize my findings throughout the project, as well as talking about some potential extensions for this project that could yield more useful information.
 Finally, Section~\ref{sec:reflection} contains my personal reflections on the whole process, and what I'd do differently next time.
 
 \section{Methodology}
